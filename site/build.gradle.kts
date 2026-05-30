@@ -1,6 +1,8 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
 import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+import org.gradle.api.tasks.Copy
+import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -56,4 +58,32 @@ tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(JVM_21)
     }
+}
+
+val jvmJar = tasks.named<Jar>("jvmJar")
+val dockerRuntime =
+    tasks.register<Copy>("dockerRuntime") {
+        description = "Prepares the application for Docker by copying the necessary files into a build directory."
+
+        dependsOn(jvmJar)
+        dependsOn("compileProductionExecutableKotlinJs")
+        dependsOn("jsBrowserDistribution")
+
+        into(layout.buildDirectory.dir("docker"))
+
+        from(jvmJar) {
+            rename { "app.jar" }
+        }
+
+        from(configurations.getByName("jvmRuntimeClasspath")) {
+            into("lib")
+        }
+
+        from(layout.buildDirectory.dir("dist/js/productionExecutable")) {
+            into("site/build/dist/js/productionExecutable")
+        }
+    }
+
+tasks.named("build") {
+    dependsOn(dockerRuntime)
 }

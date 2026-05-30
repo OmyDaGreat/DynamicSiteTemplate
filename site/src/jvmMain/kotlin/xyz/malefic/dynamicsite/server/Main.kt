@@ -6,11 +6,12 @@ import org.http4k.server.Undertow
 import org.http4k.server.asServer
 
 fun main() {
+    val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
     val server =
         ServerFilters
             .Cors(corsPolicy)
             .then(http)
-            .asServer(Undertow(8000))
+            .asServer(Undertow(port))
             .start()
 
     println("Server started on port ${server.port()}!")

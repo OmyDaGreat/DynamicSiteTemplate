@@ -44,7 +44,7 @@ fun MessagesPage() {
         }
     }
 
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(Modifier.padding(16.px)) {
             when {
                 isLoading.value -> {

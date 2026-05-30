@@ -35,10 +35,12 @@ private fun serveStaticFile(req: Request): Response {
 
     // Support both development and Docker deployments:
     // - Development: site/build/dist/js/productionExecutable/public/ (relative to site/)
-    // - Docker: /app/static/ (absolute path in container)
+    // - Docker: /app/site/build/dist/js/productionExecutable/public/ (absolute path in container)
     val staticDirs = listOf(
+        Paths.get("build", "dist", "js", "productionExecutable"),       // generated JS bundle
         Paths.get("build", "dist", "js", "productionExecutable", "public"),  // dev from site/
-        Paths.get("/app", "static"),                                          // docker
+        Paths.get("/app", "site", "build", "dist", "js", "productionExecutable"),
+        Paths.get("/app", "site", "build", "dist", "js", "productionExecutable", "public"),
     )
 
     val fileName = requestPath.ifEmpty { "index.html" }
@@ -78,7 +80,8 @@ val http: HttpHandler =
     object : HttpHandler {
         override fun invoke(req: Request): Response =
             try {
-                apiRoutes(req)
+                val response = apiRoutes(req)
+                if (response.status == NOT_FOUND) serveStaticFile(req) else response
             } catch (e: Exception) {
                 serveStaticFile(req)
             }

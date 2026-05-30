@@ -15,7 +15,7 @@ This is a **single-module KMP project** with two targets:
 ### jvmMain - http4k Backend
 - **Location**: `site/src/jvmMain`
 - HTTP server built with http4k framework
-- Runs on Undertow server backend (port 8000)
+- Runs on Undertow server backend (port 8080)
 - Serves API endpoints and static frontend files
 
 ## Building
@@ -33,7 +33,7 @@ Runs the jvmMain entry point:
 ./gradlew jvmRun
 ```
 
-The server will start on `http://localhost:8000`
+The server will start on `http://localhost:8080`
 
 ## API Endpoints
 
