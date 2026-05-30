@@ -1,4 +1,6 @@
 import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -19,6 +21,12 @@ kobweb {
 
 kotlin {
     configAsKobwebApplication("dynamicsite")
+    
+    jvm {
+        mainRun {
+            mainClass = "xyz.malefic.dynamicsite.server.MainKt"
+        }
+    }
 
     sourceSets {
         jsMain.dependencies {
@@ -27,5 +35,16 @@ kotlin {
             implementation(libs.bundles.silk.icons)
             implementation(libs.kutint)
         }
+        
+        jvmMain.dependencies {
+            compileOnly(libs.kobweb.api)
+            implementation(libs.bundles.http4k)
+        }
+    }
+}
+
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JVM_21)
     }
 }

@@ -1,0 +1,15 @@
+package xyz.malefic.dynamicsite.server
+
+import org.http4k.core.then
+import org.http4k.filter.ServerFilters
+import org.http4k.server.Undertow
+import org.http4k.server.asServer
+
+fun main() {
+    val server = ServerFilters.Cors(corsPolicy)
+        .then(http)
+        .asServer(Undertow(8000))
+        .start()
+
+    println("Server started on port ${server.port()}!")
+}
