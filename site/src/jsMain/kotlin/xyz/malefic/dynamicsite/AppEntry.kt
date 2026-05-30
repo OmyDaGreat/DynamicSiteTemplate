@@ -1,4 +1,4 @@
-package xyz.malefic.staticsite
+package xyz.malefic.dynamicsite
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
