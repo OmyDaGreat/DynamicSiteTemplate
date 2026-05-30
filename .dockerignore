@@ -1,0 +1,15 @@
+.git
+.gradle
+.idea
+.kotlin
+build
+kotlin-js-store
+.github
+.gitignore
+*.md
+docker-compose*.yml
+Dockerfile*
+.env
+.env.*
+*.log
+.DS_Store

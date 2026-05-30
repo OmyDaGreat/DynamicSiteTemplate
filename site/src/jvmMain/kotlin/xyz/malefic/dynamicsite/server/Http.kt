@@ -1,5 +1,6 @@
 package xyz.malefic.dynamicsite.server
 
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.http4k.core.ContentType.Companion.APPLICATION_JSON
 import org.http4k.core.HttpHandler
@@ -32,22 +33,29 @@ private val json = Json { ignoreUnknownKeys = true }
 private fun serveStaticFile(req: Request): Response {
     val requestPath = req.uri.path.removePrefix("/")
 
-    // When running jvmRun, the CWD is the site directory
-    // Built frontend is at build/dist/js/productionExecutable/public/
-    val baseDir = Paths.get("build", "dist", "js", "productionExecutable", "public").toAbsolutePath()
-    val fileName = requestPath.ifEmpty { "index.html" }
-    val filePath = baseDir.resolve(fileName).normalize()
+    // Support both development and Docker deployments:
+    // - Development: site/build/dist/js/productionExecutable/public/ (relative to site/)
+    // - Docker: /app/static/ (absolute path in container)
+    val staticDirs = listOf(
+        Paths.get("build", "dist", "js", "productionExecutable", "public"),  // dev from site/
+        Paths.get("/app", "static"),                                          // docker
+    )
 
-    return if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
-        try {
-            val content = Files.readAllBytes(filePath)
-            Response(OK).body(String(content))
-        } catch (e: Exception) {
-            Response(NOT_FOUND).body(e.toString())
+    val fileName = requestPath.ifEmpty { "index.html" }
+
+    for (baseDir in staticDirs) {
+        val filePath = baseDir.resolve(fileName).normalize()
+        if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
+            return try {
+                val content = Files.readAllBytes(filePath)
+                Response(OK).body(String(content))
+            } catch (e: Exception) {
+                Response(NOT_FOUND).body(e.toString())
+            }
         }
-    } else {
-        Response(NOT_FOUND)
     }
+
+    return Response(NOT_FOUND)
 }
 
 val apiRoutes: RoutingHttpHandler =
@@ -55,12 +63,11 @@ val apiRoutes: RoutingHttpHandler =
         "/api/ping" bind GET to { Response(OK).body("pong") },
         "/api/health" bind GET to { Response(OK).body("healthy") },
         "/api/messages" bind GET to {
-            val messages =
-                listOf(
-                    Message(1, "Hello from the server!", System.currentTimeMillis()),
-                    Message(2, "This data is shared via commonMain!", System.currentTimeMillis() - 5000),
-                    Message(3, "Fetched via JSON API", System.currentTimeMillis() - 10000),
-                )
+            val messages = listOf(
+                Message(1, "Hello from the server!", System.currentTimeMillis()),
+                Message(2, "This data is shared via commonMain!", System.currentTimeMillis() - 5000),
+                Message(3, "Fetched via JSON API", System.currentTimeMillis() - 10000),
+            )
             Response(OK)
                 .header("Content-Type", APPLICATION_JSON.value)
                 .body(json.encodeToString(messages))
