@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -63,7 +65,10 @@ fun MessagesPage() {
                     Text("Messages from Server (${messages.value.size})")
                     messages.value.forEach { msg ->
                         Box(Modifier.padding(8.px)) {
-                            Column {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.px),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
                                 Text("ID: ${msg.id}")
                                 Text("Text: ${msg.text}")
                                 Text("Time: ${msg.timestamp}")
