@@ -1,7 +1,7 @@
 [versions]
 jetbrains-compose = "1.11.1"
-kobweb = "0.24.1"
-kotlin = "2.3.21"
+kobweb = "0.25.0"
+kotlin = "2.4.0"
 kutint = "1.0.1"
 http4k = "6.55.0.0"
 kotlinx-serialization = "1.11.0"
@@ -15,7 +15,7 @@ kobweb-api = { module = "com.varabyte.kobweb:kobweb-api", version.ref = "kobweb"
 kobwebx-serialization-kotlinx = { module = "com.varabyte.kobwebx:kobwebx-serialization-kotlinx", version.ref = "kobweb" }
 silk-foundation = { module = "com.varabyte.kobweb:silk-foundation", version.ref = "kobweb" }
 silk-icons-fa = { module = "com.varabyte.kobwebx:silk-icons-fa", version.ref = "kobweb" }
-silk-icons-mdi = { module = "com.varabyte.kobwebx:silk-icons-mdi", version.ref = "kobweb" }
+silk-icons-ms = { module = "com.varabyte.kobwebx:silk-icons-ms", version.ref = "kobweb" }
 kutint = { group = "xyz.malefic", name = "kutint", version.ref = "kutint" }
 
 http4k-core = { group = "org.http4k", name = "http4k-core", version.ref = "http4k" }
@@ -33,5 +33,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 [bundles]
 kobweb = ["kobweb-core", "kobweb-silk"]
 compose = ["compose-html-core", "compose-runtime"]
-silk-icons = ["silk-icons-fa", "silk-icons-mdi"]
+silk-icons = ["silk-icons-fa", "silk-icons-ms"]
 http4k = ["http4k-core", "http4k-server-undertow"]

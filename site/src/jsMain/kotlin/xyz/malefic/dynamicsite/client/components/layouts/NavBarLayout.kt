@@ -1,4 +1,4 @@
-package xyz.malefic.dynamicsite.components.layouts
+package xyz.malefic.dynamicsite.client.components.layouts
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -19,11 +19,11 @@ import com.varabyte.kobweb.silk.style.toModifier
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
 import org.jetbrains.compose.web.dom.Text
-import xyz.malefic.dynamicsite.styles.ActiveNavItemStyle
-import xyz.malefic.dynamicsite.styles.NavBarStyle
-import xyz.malefic.dynamicsite.styles.NavItemHoverStyle
-import xyz.malefic.dynamicsite.styles.isCurrentPage
-import xyz.malefic.dynamicsite.util.Pages
+import xyz.malefic.dynamicsite.client.styles.ActiveNavItemStyle
+import xyz.malefic.dynamicsite.client.styles.NavBarStyle
+import xyz.malefic.dynamicsite.client.styles.NavItemHoverStyle
+import xyz.malefic.dynamicsite.client.styles.isCurrentPage
+import xyz.malefic.dynamicsite.client.util.Pages
 
 @Layout
 @Composable

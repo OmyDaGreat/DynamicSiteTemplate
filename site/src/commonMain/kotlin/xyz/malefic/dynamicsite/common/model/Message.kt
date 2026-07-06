@@ -1,4 +1,4 @@
-package xyz.malefic.dynamicsite.model
+package xyz.malefic.dynamicsite.common.model
 
 import kotlinx.serialization.Serializable
 

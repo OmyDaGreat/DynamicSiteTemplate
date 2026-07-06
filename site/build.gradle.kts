@@ -18,6 +18,7 @@ group = "xyz.malefic.dynamicsite"
 version = "1.0.0"
 
 kobweb {
+    pagesPackage = "xyz.malefic.dynamicsite.client.pages"
     app {
         index {
             description.set("Powered by Kobweb")
@@ -61,13 +62,23 @@ tasks.withType<KotlinJvmCompile>().configureEach {
 }
 
 val jvmJar = tasks.named<Jar>("jvmJar")
+val kobwebStaticSite =
+    tasks.register<Copy>("kobwebStaticSite") {
+        description = "Copies the generated Kobweb production site into the server-visible build directory."
+
+        dependsOn("jsBrowserDistribution")
+
+        into(layout.projectDirectory.dir(".kobweb/site"))
+
+        from(layout.buildDirectory.dir("dist/js/productionExecutable"))
+    }
+
 val dockerRuntime =
     tasks.register<Copy>("dockerRuntime") {
         description = "Prepares the application for Docker by copying the necessary files into a build directory."
 
         dependsOn(jvmJar)
-        dependsOn("compileProductionExecutableKotlinJs")
-        dependsOn("jsBrowserDistribution")
+        dependsOn(kobwebStaticSite)
 
         into(layout.buildDirectory.dir("docker"))
 
@@ -79,11 +90,27 @@ val dockerRuntime =
             into("lib")
         }
 
-        from(layout.buildDirectory.dir("dist/js/productionExecutable")) {
-            into("site/build/dist/js/productionExecutable")
+        from(layout.projectDirectory.dir(".kobweb/site")) {
+            into("site/.kobweb/site")
         }
     }
 
 tasks.named("build") {
     dependsOn(dockerRuntime)
+}
+
+afterEvaluate {
+    afterEvaluate {
+        tasks.named("jvmRun") {
+            dependsOn(kobwebStaticSite)
+        }
+    }
+}
+
+configurations.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin-test")) {
+            useVersion(libs.versions.kotlin.get())
+        }
+    }
 }

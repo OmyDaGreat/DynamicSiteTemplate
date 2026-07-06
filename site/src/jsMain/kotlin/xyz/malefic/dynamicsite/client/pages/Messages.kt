@@ -1,4 +1,4 @@
-package xyz.malefic.dynamicsite.pages
+package xyz.malefic.dynamicsite.client.pages
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,10 +15,10 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.core.Page
 import kotlinx.browser.window
 import kotlinx.coroutines.await
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Text
-import xyz.malefic.dynamicsite.model.Message
+import xyz.malefic.dynamicsite.common.json
+import xyz.malefic.dynamicsite.common.model.Message
 
 @Page
 @Composable
@@ -32,8 +32,8 @@ fun MessagesPage() {
             val response = window.fetch("/api/messages").await()
 
             if (response.ok) {
-                val json = response.text().await()
-                val parsed = Json.decodeFromString<List<Message>>(json)
+                val string = response.text().await()
+                val parsed = json.decodeFromString<List<Message>>(string)
                 messages.value = parsed
                 isLoading.value = false
             } else {
