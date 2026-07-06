@@ -1,7 +1,7 @@
 ARG TARGETARCH
 
 # Build stage
-FROM eclipse-temurin:21-jdk AS builder
+FROM eclipse-temurin:26-jdk AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ COPY . .
 RUN ./gradlew :site:dockerRuntime
 
 # Runtime stage
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:26-jre
 
 WORKDIR /app
 
