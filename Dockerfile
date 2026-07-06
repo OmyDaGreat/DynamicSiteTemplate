@@ -1,6 +1,6 @@
 ARG TARGETARCH
 
-# Multi-stage build
+# Build stage
 FROM eclipse-temurin:21-jdk AS builder
 
 WORKDIR /app
@@ -14,15 +14,13 @@ RUN chmod +x ./gradlew
 
 COPY . .
 
-# Build both jsMain and jvmMain
-RUN ./gradlew :site:jvmJar :site:compileProductionExecutableKotlinJs
+RUN ./gradlew :site:dockerRuntime
 
 # Runtime stage
 FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-# Copy prebuilt runtime artifacts only; no Gradle required in the container.
 COPY --from=builder /app/site/build/docker /app
 
 EXPOSE 8080
