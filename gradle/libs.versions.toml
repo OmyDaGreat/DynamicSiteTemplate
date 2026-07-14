@@ -1,7 +1,7 @@
 [versions]
 jetbrains-compose = "1.11.1"
 kobweb = "0.25.0"
-kotlin = "2.4.0"
+kotlin = "2.4.10"
 kutint = "1.0.2"
 http4k = "6.55.0.0"
 kotlinx-serialization = "1.11.0"
